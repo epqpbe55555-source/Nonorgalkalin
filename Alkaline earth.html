@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Smart — Alkaline Earth Metals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F151C;
+    --bg-raised:#161F29;
+    --bg-raised-2:#1C2733;
+    --ink:#EAEEF1;
+    --ink-dim:#93A5B3;
+    --ink-faint:#5C6E7C;
+    --line:#28353F;
+    --line-soft:#1E2932;
+
+    --ca:#E2582E;   /* calcium flame — brick orange   */
+    --ba:#6FBE7C;   /* barium flame — apple green      */
+    --sr:#D8495F;   /* strontium flame — crimson       */
+    --mg:#F2ECD9;   /* magnesium burn — bright white   */
+    --ra:#C084E0;   /* radium — radioactive glow       */
+
+    --accent: var(--ca);
+    --serif:'Fraunces', serif;
+    --sans:'Inter', system-ui, sans-serif;
+    --mono:'JetBrains Mono', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 1200px 600px at 15% -10%, rgba(226,88,46,.08), transparent 60%),
+      radial-gradient(ellipse 1000px 700px at 100% 0%, rgba(192,132,224,.06), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--accent); color:#0F151C;}
+
+  button{font-family:inherit; cursor:pointer;}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    max-width:1100px;
+    margin:0 auto;
+    padding:64px 28px 40px;
+  }
+  .hero-top{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:24px;
+    flex-wrap:wrap;
+    border-bottom:1px solid var(--line);
+    padding-bottom:36px;
+  }
+  .hero-mark{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.14em;
+    color:var(--ink-dim);
+  }
+  .hero h1{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(48px, 8vw, 92px);
+    line-height:.94;
+    margin:10px 0 0;
+    font-optical-sizing:auto;
+  }
+  .hero h1 em{
+    font-style:italic;
+    font-weight:400;
+    color:var(--accent);
+    transition:color .3s;
+  }
+  .hero p.sub{
+    max-width:46ch;
+    color:var(--ink-dim);
+    font-size:16px;
+    margin:16px 0 0;
+  }
+  .cell-row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .el-cell{
+    width:64px; height:64px;
+    border:1px solid var(--line);
+    background:var(--bg-raised);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    font-family:var(--mono);
+  }
+  .el-cell .z{ font-size:9px; color:var(--ink-faint); align-self:flex-start; margin:5px 0 0 6px;}
+  .el-cell .sym{ font-size:19px; font-weight:600; margin-top:-4px;}
+  .el-cell .name{ font-size:8px; color:var(--ink-dim); letter-spacing:.03em; margin-top:2px;}
+
+  /* ---------- NAV / TABS ---------- */
+  .tabs{
+    max-width:1100px;
+    margin:0 auto;
+    padding:0 28px;
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:10px;
+    position:sticky;
+    top:14px;
+    z-index:40;
+  }
+  .tab{
+    background:rgba(22,31,41,.9);
+    backdrop-filter:blur(6px);
+    border:1px solid var(--line);
+    border-bottom:3px solid transparent;
+    padding:12px 14px 10px;
+    text-align:left;
+    color:var(--ink-dim);
+    transition:border-color .2s, color .2s, background .2s;
+  }
+  .tab .code{ font-family:var(--mono); font-size:10px; letter-spacing:.1em; opacity:.7;}
+  .tab .label{ font-family:var(--serif); font-size:16px; color:var(--ink); margin-top:3px; display:block;}
+  .tab.is-active{
+    border-bottom-color:var(--tab-accent, var(--ca));
+    color:var(--tab-accent, var(--ca));
+    background:var(--bg-raised);
+  }
+  .tab.is-active .label{ color:var(--ink);}
+  .tab:hover{ color:var(--ink); }
+
+  /* ---------- PANELS ---------- */
+  main{ max-width:1100px; margin:0 auto; padding:34px 28px 110px;}
+  .panel{ display:none; animation:rise .35s ease; }
+  .panel.is-active{ display:block; }
+  @keyframes rise{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+
+  .panel-head{
+    display:flex; align-items:baseline; gap:14px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:16px; margin-bottom:28px;
+    flex-wrap:wrap;
+  }
+  .panel-head h2{
+    font-family:var(--serif); font-weight:600;
+    font-size:clamp(28px,4vw,38px); margin:0;
+  }
+  .panel-head .tag{
+    font-family:var(--mono); font-size:11px;
+    color:var(--panel-accent);
+    border:1px solid var(--panel-accent);
+    padding:3px 8px;
+  }
+  .panel-head p{ color:var(--ink-dim); margin:6px 0 0; max-width:60ch; font-size:14.5px; flex-basis:100%;}
+
+  #overview{ --panel-accent:var(--ca); }
+  #diagrams{ --panel-accent:var(--ba); }
+  #minimap{  --panel-accent:var(--sr); }
+  #flashcards{ --panel-accent:var(--mg); }
+  #quiz{ --panel-accent:var(--ra); }
+
+  /* ---------- OVERVIEW ---------- */
+  .ov-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .ov-card{
+    background:var(--bg-raised);
+    padding:20px 22px;
+  }
+  .ov-card h3{
+    font-family:var(--mono); font-size:12px; letter-spacing:.06em;
+    color:var(--ca); margin:0 0 12px; text-transform:none;
+  }
+  .ov-card ul{ margin:0; padding-left:18px; font-size:14px; color:var(--ink); }
+  .ov-card li{ margin-bottom:8px; }
+  .ov-card li::marker{ color:var(--ink-faint); }
+  .ov-card b{ color:var(--ink); font-weight:600; }
+  .ov-card .note{ color:var(--ink-dim); }
+
+  /* ---------- DIAGRAMS ---------- */
+  .dg-block{
+    border:1px solid var(--line);
+    background:var(--bg-raised);
+    padding:24px;
+    margin-bottom:22px;
+  }
+  .dg-block h3{
+    font-family:var(--serif); font-size:20px; margin:0 0 4px;
+  }
+  .dg-block .hint{ color:var(--ink-faint); font-size:12.5px; margin:0 0 18px; }
+
+  .trend-row{ display:flex; align-items:center; gap:0; flex-wrap:wrap; }
+  .trend-node{
+    background:var(--bg-raised-2);
+    border:1px solid var(--line);
+    padding:10px 14px;
+    font-family:var(--mono); font-size:13px;
+    color:var(--ink-dim);
+    text-align:center; min-width:64px;
+  }
+  .trend-node .z2{ font-size:9px; color:var(--ink-faint); display:block;}
+  .trend-node.is-picked{ border-color:var(--ba); color:var(--ba); background:rgba(111,190,124,.08); }
+  .trend-arrow{ color:var(--ink-faint); padding:0 6px; font-size:13px; }
+  .detail-box{
+    margin-top:16px;
+    border-left:2px solid var(--ba);
+    padding:12px 16px;
+    background:var(--bg-raised-2);
+    font-size:14px;
+    color:var(--ink);
+    min-height:24px;
+  }
+  .detail-box.muted{ color:var(--ink-faint); font-style:italic; }
+
+  .flow{ display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+  .flow-node{
+    border:1px solid var(--line);
+    background:var(--bg-raised-2);
+    padding:10px 14px;
+    font-size:13px;
+    cursor:pointer;
+    transition:border-color .2s,color .2s;
+  }
+  .flow-node:hover, .flow-node.is-picked{ border-color:var(--ba); color:var(--ba); }
+  .flow-sep{ color:var(--ink-faint); }
+
+  .cycle{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px;
+  }
+  .cycle-node{
+    border:1px solid var(--line);
+    background:var(--bg-raised-2);
+    padding:14px;
+    font-size:13px;
+    text-align:left;
+    color:var(--ink-dim);
+  }
+  .cycle-node .n{ font-family:var(--mono); font-size:11px; color:var(--sr); display:block; margin-bottom:6px;}
+  .cycle-node:hover, .cycle-node.is-picked{ border-color:var(--sr); color:var(--ink); }
+
+  table.mini{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  table.mini th{ text-align:left; font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); font-weight:500; padding:8px 10px; border-bottom:1px solid var(--line); }
+  table.mini td{ padding:9px 10px; border-bottom:1px solid var(--line-soft); color:var(--ink-dim); }
+  table.mini tr:hover td{ color:var(--ink); background:rgba(111,190,124,.05); }
+  table.mini td b{ color:var(--ink); font-weight:600; }
+
+  /* ---------- MINI MAP ---------- */
+  .mm-wrap{ display:grid; grid-template-columns:320px 1fr; gap:0; border:1px solid var(--line); min-height:520px; }
+  .mm-list{ border-right:1px solid var(--line); max-height:640px; overflow-y:auto; }
+  .mm-item{
+    display:block; width:100%; text-align:left;
+    background:none; border:none; border-bottom:1px solid var(--line-soft);
+    color:var(--ink-dim); padding:13px 18px; font-size:13.5px;
+    display:flex; justify-content:space-between; gap:10px; align-items:center;
+  }
+  .mm-item .grp{ font-family:var(--mono); font-size:9.5px; color:var(--ink-faint); }
+  .mm-item:hover{ color:var(--ink); background:var(--bg-raised); }
+  .mm-item.is-picked{ color:var(--sr); background:var(--bg-raised); border-left:3px solid var(--sr); padding-left:15px; }
+  .mm-reader{ padding:28px 30px; background:var(--bg-raised); }
+  .mm-reader .rk{ font-family:var(--mono); font-size:11px; color:var(--sr); letter-spacing:.06em; }
+  .mm-reader h3{ font-family:var(--serif); font-size:26px; margin:8px 0 16px; }
+  .mm-reader p{ color:var(--ink); font-size:15px; margin:0; max-width:62ch; }
+  .mm-reader .placeholder{ color:var(--ink-faint); font-style:italic; }
+
+  /* ---------- FLASHCARDS ---------- */
+  .fc-filters{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px; }
+  .fc-filter{
+    background:none; border:1px solid var(--line); color:var(--ink-dim);
+    padding:7px 14px; font-size:12.5px; font-family:var(--mono);
+  }
+  .fc-filter.is-active{ border-color:var(--mg); color:var(--mg); }
+  .fc-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:14px; }
+  .fc-card{ perspective:1200px; height:170px; }
+  .fc-card.is-hidden{ display:none; }
+  .fc-inner{
+    position:relative; width:100%; height:100%;
+    transform-style:preserve-3d; transition:transform .5s cubic-bezier(.22,1,.36,1);
+    cursor:pointer;
+  }
+  .fc-card.flipped .fc-inner{ transform:rotateY(180deg); }
+  .fc-face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    border:1px solid var(--line); padding:16px; display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .fc-face.front{ background:var(--bg-raised); }
+  .fc-face.back{ background:var(--bg-raised-2); transform:rotateY(180deg); border-color:var(--mg); }
+  .fc-tag{ font-family:var(--mono); font-size:9.5px; color:var(--ink-faint); letter-spacing:.05em; }
+  .fc-face.back .fc-tag{ color:var(--mg); }
+  .fc-q{ font-size:14.5px; color:var(--ink); line-height:1.4; }
+  .fc-a{ font-size:13.5px; color:var(--ink); line-height:1.42; }
+  .fc-hint{ font-size:10.5px; color:var(--ink-faint); text-align:right; }
+
+  /* ---------- QUIZ ---------- */
+  .quiz-bar{
+    display:flex; justify-content:space-between; align-items:center;
+    border:1px solid var(--line); background:var(--bg-raised);
+    padding:14px 20px; margin-bottom:24px; flex-wrap:wrap; gap:12px;
+  }
+  .quiz-score{ font-family:var(--mono); font-size:13px; color:var(--ink); }
+  .quiz-score b{ color:var(--ra); }
+  .btn-reset{
+    background:none; border:1px solid var(--ra); color:var(--ra);
+    padding:8px 16px; font-size:12px; font-family:var(--mono);
+  }
+  .btn-reset:hover{ background:var(--ra); color:#161020; }
+
+  .q-item{ border:1px solid var(--line); background:var(--bg-raised); padding:20px 22px; margin-bottom:12px; }
+  .q-item .q-num{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); }
+  .q-item .q-text{ font-size:15px; margin:6px 0 16px; color:var(--ink); }
+  .q-opts{ display:grid; gap:8px; }
+  .q-opt{
+    text-align:left; background:var(--bg-raised-2); border:1px solid var(--line);
+    padding:10px 14px; font-size:13.5px; color:var(--ink-dim);
+  }
+  .q-opt:hover:not(:disabled){ border-color:var(--ra); color:var(--ink); }
+  .q-opt.correct{ border-color:var(--ba); color:var(--ba); background:rgba(111,190,124,.08); }
+  .q-opt.wrong{ border-color:var(--sr); color:var(--sr); background:rgba(216,73,95,.08); }
+  .q-opt:disabled{ cursor:default; }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:26px 28px 40px;
+    max-width:1100px; margin:0 auto;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    font-family:var(--mono); font-size:11.5px; color:var(--ink-faint);
+  }
+
+  @media (max-width:760px){
+    .tabs{ grid-template-columns:repeat(2,1fr); position:static; }
+    .mm-wrap{ grid-template-columns:1fr; }
+    .mm-list{ border-right:none; border-bottom:1px solid var(--line); max-height:280px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-top">
+    <div>
+      <div class="hero-mark">INORGANIC PHARMACEUTICAL CHEMISTRY — GROUP 2</div>
+      <h1>Study<br><em>Smart.</em></h1>
+      <p class="sub">Everything on the alkaline earth metals — beryllium through radium — reduced to what you actually need to recall in an exam.</p>
+    </div>
+    <div class="cell-row" id="heroCells"></div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab" data-target="overview" style="--tab-accent:#E2582E;"><span class="code">01 · Ca</span><span class="label">Overview</span></button>
+  <button class="tab" data-target="diagrams" style="--tab-accent:#6FBE7C;"><span class="code">02 · Ba</span><span class="label">Diagrams</span></button>
+  <button class="tab" data-target="minimap" style="--tab-accent:#D8495F;"><span class="code">03 · Sr</span><span class="label">Mini Map</span></button>
+  <button class="tab" data-target="flashcards" style="--tab-accent:#F2ECD9;"><span class="code">04 · Mg</span><span class="label">Flashcards</span></button>
+  <button class="tab" data-target="quiz" style="--tab-accent:#C084E0;"><span class="code">05 · Ra</span><span class="label">Quiz Bank</span></button>
+</nav>
+
+<main>
+
+  <!-- ============ 1. OVERVIEW ============ -->
+  <section id="overview" class="panel is-active">
+    <div class="panel-head">
+      <h2>Overview</h2>
+      <span class="tag">the laws, not the lecture</span>
+      <p>Group 2 in one pass — identity, chemistry, and the three medically important members.</p>
+    </div>
+
+    <div class="ov-grid">
+      <div class="ov-card">
+        <h3>IDENTITY</h3>
+        <ul>
+          <li>Group 2 = <b>Be, Mg, Ca, Sr, Ba, Ra</b> (s-block, with the alkali metals)</li>
+          <li><b>2 valence electrons</b>, ns² configuration</li>
+          <li>Always lose both electrons → stable <b>M²⁺</b> cation</li>
+          <li>Too reactive to exist free in nature — found as cations in minerals</li>
+        </ul>
+      </div>
+      <div class="ov-card">
+        <h3>GROUP TREND</h3>
+        <ul>
+          <li>Electropositivity <b>increases down the group</b> (Mg → Ba)</li>
+          <li>Hydroxide solubility & thermal stability <b>increase</b> down the group</li>
+          <li>Oxides: general formula <b>MO</b>, generally basic</li>
+          <li>Peroxides exist for Mg, Ca, Sr, Ba — <b>not for Be</b></li>
+          <li>Hydroxides act as bases <b>except Be(OH)₂</b></li>
+        </ul>
+      </div>
+      <div class="ov-card">
+        <h3>HALIDES</h3>
+        <ul>
+          <li>Halides of Mg/Ca/Sr/Ba are <b>ionic</b>, sparingly soluble in water</li>
+          <li><b>MgCl₂, MgBr₂, MgI₂</b> are hygroscopic — absorb moisture</li>
+          <li>Anhydrous <b>CaCl₂</b> — strong water affinity → used as a <b>desiccant</b></li>
+        </ul>
+      </div>
+      <div class="ov-card">
+        <h3>BERYLLIUM — TOXIC, NOT THERAPEUTIC</h3>
+        <ul>
+          <li>Extremely poisonous — negligible clinical use</li>
+          <li>Inhalation → <b>Chronic Beryllium Disease (CBD)</b></li>
+          <li>Skin contact with soluble salts → severe irritation</li>
+        </ul>
+      </div>
+      <div class="ov-card">
+        <h3>MAGNESIUM — THE COFACTOR</h3>
+        <ul>
+          <li>Cofactor for <b>300+ enzymes</b>; activates ATP (Mg-ATP); stabilises DNA/RNA; core of chlorophyll</li>
+          <li>Most Mg salts soluble → <b>laxative</b>; Mg(OH)₂ suspension = <b>milk of magnesia</b> (antacid)</li>
+          <li>IV/IM <b>MgSO₄</b> = emergency drug for arrhythmia and <b>eclampsia</b></li>
+          <li>Absorbed in ileum/colon, excreted by kidneys — <b>reduce dose in renal impairment</b></li>
+          <li>Reduces absorption of iron, nitrofurantoin, proguanil, ACE inhibitors, aspirin, penicillamine</li>
+        </ul>
+      </div>
+      <div class="ov-card">
+        <h3>CALCIUM — THE MESSENGER</h3>
+        <ul>
+          <li>Most abundant inorganic element in the body (~1000 g); <b>99% in bone/teeth</b></li>
+          <li>Regulated by <b>PTH</b> — raises blood Ca²⁺ via bone resorption, gut uptake, renal reabsorption</li>
+          <li>Deficiency links: osteoporosis, hypertension, obesity</li>
+          <li><b>Renal osteodystrophy</b>: failed kidneys → low calcitriol → hypocalcemia + hyperphosphatemia → PTH-driven bone loss</li>
+          <li>Higher dietary calcium (~1200 mg/day) is now linked to <b>fewer</b> oxalate kidney stones, reversing older belief</li>
+          <li>Calcium carbonate = 40% elemental Ca; take with food; pair with Mg salts to offset constipation</li>
+          <li>Severe acute hypocalcemia → slow IV <b>10% calcium gluconate</b>, with ECG monitoring</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. DIAGRAMS ============ -->
+  <section id="diagrams" class="panel">
+    <div class="panel-head">
+      <h2>Diagrams</h2>
+      <span class="tag">click anything</span>
+      <p>Every figure from the material, rebuilt so you can click through it instead of just reading it.</p>
+    </div>
+
+    <div class="dg-block">
+      <h3>Electron configuration explorer</h3>
+      <p class="hint">Click an element to reveal its configuration and why it forms M²⁺.</p>
+      <div class="trend-row" id="configRow"></div>
+      <div class="detail-box muted" id="configDetail">Select an element above.</div>
+    </div>
+
+    <div class="dg-block">
+      <h3>Down-the-group property trend (Mg → Ba)</h3>
+      <p class="hint">Click a stop on the trend to see what increases as you descend Group 2.</p>
+      <div class="trend-row" id="trendRow"></div>
+      <div class="detail-box muted" id="trendDetail">Select a stop above.</div>
+    </div>
+
+    <div class="dg-block">
+      <h3>Vitamin D activation pathway</h3>
+      <p class="hint">Click each stage — this pathway is the root cause of renal osteodystrophy.</p>
+      <div class="flow" id="flowRow"></div>
+      <div class="detail-box muted" id="flowDetail">Select a stage above.</div>
+    </div>
+
+    <div class="dg-block">
+      <h3>The renal osteodystrophy cycle</h3>
+      <p class="hint">Four steps, feeding into each other. Click each to expand.</p>
+      <div class="cycle" id="cycleRow"></div>
+      <div class="detail-box muted" id="cycleDetail">Select a step above.</div>
+    </div>
+
+    <div class="dg-block">
+      <h3>Mineral sources at a glance</h3>
+      <p class="hint">Hover a row.</p>
+      <table class="mini">
+        <thead><tr><th>Element</th><th>Mineral</th><th>Formula</th></tr></thead>
+        <tbody>
+          <tr><td><b>Beryllium</b></td><td>Beryl (aquamarine, emerald)</td><td>Be₃Al₂[Si₆O₁₈]</td></tr>
+          <tr><td><b>Magnesium</b></td><td>Magnesite / Dolomite</td><td>MgCO₃ / MgCO₃·CaCO₃</td></tr>
+          <tr><td><b>Calcium</b></td><td>Limestone, chalk, marble</td><td>CaCO₃</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 3. MINI MAP ============ -->
+  <section id="minimap" class="panel">
+    <div class="panel-head">
+      <h2>Mini Map</h2>
+      <span class="tag">click a title</span>
+      <p>Every topic from the material as a title — pick one and its full notes open on the right.</p>
+    </div>
+    <div class="mm-wrap">
+      <div class="mm-list" id="mmList"></div>
+      <div class="mm-reader" id="mmReader">
+        <span class="rk">TOPIC</span>
+        <h3>Choose a title</h3>
+        <p class="placeholder">Its notes will appear right here, in this same panel.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. FLASHCARDS ============ -->
+  <section id="flashcards" class="panel">
+    <div class="panel-head">
+      <h2>Flashcards</h2>
+      <span class="tag" id="fcCount">— cards</span>
+      <p>Tap a card to flip it. Filter by topic if you're drilling one metal at a time.</p>
+    </div>
+    <div class="fc-filters" id="fcFilters"></div>
+    <div class="fc-grid" id="fcGrid"></div>
+  </section>
+
+  <!-- ============ 5. QUIZ ============ -->
+  <section id="quiz" class="panel">
+    <div class="panel-head">
+      <h2>Quiz Bank</h2>
+      <span class="tag" id="quizCount">— questions</span>
+      <p>Options are shuffled per question. Pick one — right and wrong are marked instantly.</p>
+    </div>
+    <div class="quiz-bar">
+      <div class="quiz-score">Score: <b id="scoreVal">0</b> / <span id="scoreTotal">0</span> answered</div>
+      <button class="btn-reset" id="resetQuiz">Reset quiz</button>
+    </div>
+    <div id="quizList"></div>
+  </section>
+
+</main>
+
+<footer>
+  <span>© Anmar Taha. All rights reserved.</span>
+  <span>Source: Inorganic Pharmaceutical Chemistry, 3rd Stage — Group 2 lecture notes.</span>
+</footer>
+
+<script>
+/* ============================================================
+   TAB NAVIGATION
+   ============================================================ */
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.panel');
+tabs.forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    tabs.forEach(t=>t.classList.remove('is-active'));
+    panels.forEach(p=>p.classList.remove('is-active'));
+    tab.classList.add('is-active');
+    document.getElementById(tab.dataset.target).classList.add('is-active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+tabs[0].classList.add('is-active');
+
+/* ============================================================
+   HERO ELEMENT CELLS
+   ============================================================ */
+const heroElements = [
+  {z:4, sym:'Be', name:'Beryllium'},
+  {z:12, sym:'Mg', name:'Magnesium'},
+  {z:20, sym:'Ca', name:'Calcium'},
+  {z:38, sym:'Sr', name:'Strontium'},
+  {z:56, sym:'Ba', name:'Barium'},
+  {z:88, sym:'Ra', name:'Radium'},
+];
+document.getElementById('heroCells').innerHTML = heroElements.map(e=>`
+  <div class="el-cell">
+    <span class="z">${e.z}</span>
+    <span class="sym">${e.sym}</span>
+    <span class="name">${e.name}</span>
+  </div>`).join('');
+
+/* ============================================================
+   DIAGRAM 1 — ELECTRON CONFIGURATION EXPLORER
+   ============================================================ */
+const configs = [
+  {sym:'Be', z:4, config:'1s² 2s²', note:'Loses the 2s² pair to form Be²⁺. Compounds are toxic — avoid in therapy.'},
+  {sym:'Mg', z:12, config:'1s² 2s² 2p⁶ 3s²', note:'Loses 3s² to form Mg²⁺. The biologically essential member of the group.'},
+  {sym:'Ca', z:20, config:'1s² 2s² 2p⁶ 3s² 3p⁶ 4s²', note:'Loses 4s² to form Ca²⁺. Most abundant inorganic cation in the body.'},
+  {sym:'Sr', z:38, config:'[Kr] 5s²', note:'Loses 5s² to form Sr²⁺. Chemically mimics calcium closely.'},
+  {sym:'Ba', z:56, config:'[Xe] 6s²', note:'Loses 6s² to form Ba²⁺. Forms a peroxide, unlike beryllium.'},
+  {sym:'Ra', z:88, config:'[Rn] 7s²', note:'Loses 7s² to form Ra²⁺. Radioactive — the outlier of the group.'},
+];
+const configRow = document.getElementById('configRow');
+const configDetail = document.getElementById('configDetail');
+configRow.innerHTML = configs.map((c,i)=>`
+  <button class="trend-node" data-i="${i}"><span class="z2">${c.z}</span>${c.sym}</button>`).join('');
+configRow.querySelectorAll('.trend-node').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    configRow.querySelectorAll('.trend-node').forEach(b=>b.classList.remove('is-picked'));
+    btn.classList.add('is-picked');
+    const c = configs[btn.dataset.i];
+    configDetail.classList.remove('muted');
+    configDetail.innerHTML = `<b>${c.sym}</b> — ${c.config}<br>${c.note}`;
+  });
+});
+
+/* ============================================================
+   DIAGRAM 2 — DOWN THE GROUP TREND
+   ============================================================ */
+const trendStops = [
+  {sym:'Mg', text:'Baseline for the biologically relevant range. Hydroxide is a weak base, moderate solubility.'},
+  {sym:'Ca', text:'More electropositive than Mg. Ca(OH)₂ more soluble and more thermally stable than Mg(OH)₂.'},
+  {sym:'Sr', text:'Reactivity keeps climbing. Peroxide forms readily; hydroxide solubility keeps increasing.'},
+  {sym:'Ba', text:'Most electropositive of the medically relevant set. Most soluble, most thermally stable hydroxide.'},
+];
+const trendRow = document.getElementById('trendRow');
+const trendDetail = document.getElementById('trendDetail');
+trendRow.innerHTML = trendStops.map((s,i)=>
+  (i>0?'<span class="trend-arrow">→</span>':'') +
+  `<button class="trend-node" data-i="${i}">${s.sym}</button>`
+).join('');
+trendRow.querySelectorAll('.trend-node').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    trendRow.querySelectorAll('.trend-node').forEach(b=>b.classList.remove('is-picked'));
+    btn.classList.add('is-picked');
+    const s = trendStops[btn.dataset.i];
+    trendDetail.classList.remove('muted');
+    trendDetail.textContent = s.text;
+  });
+});
+
+/* ============================================================
+   DIAGRAM 3 — VITAMIN D ACTIVATION PATHWAY
+   ============================================================ */
+const flowStages = [
+  {label:'Vitamin D', text:'Dietary or skin-synthesised vitamin D enters the pathway inactive.'},
+  {label:'Liver', text:'The liver performs the first hydroxylation, converting vitamin D to calcidiol.'},
+  {label:'Calcidiol', text:'The circulating storage form — not yet biologically active.'},
+  {label:'Kidney', text:'Healthy kidneys perform the final hydroxylation step. This step fails in renal disease.'},
+  {label:'Calcitriol', text:'The active hormone — promotes dietary Ca²⁺ uptake. If levels stay too low, PTH is released instead.'},
+];
+const flowRow = document.getElementById('flowRow');
+const flowDetail = document.getElementById('flowDetail');
+flowRow.innerHTML = flowStages.map((f,i)=>
+  (i>0?'<span class="flow-sep">→</span>':'') +
+  `<button class="flow-node" data-i="${i}">${f.label}</button>`
+).join('');
+flowRow.querySelectorAll('.flow-node').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    flowRow.querySelectorAll('.flow-node').forEach(b=>b.classList.remove('is-picked'));
+    btn.classList.add('is-picked');
+    flowDetail.classList.remove('muted');
+    flowDetail.textContent = flowStages[btn.dataset.i].text;
+  });
+});
+
+/* ============================================================
+   DIAGRAM 4 — RENAL OSTEODYSTROPHY CYCLE
+   ============================================================ */
+const cycleSteps = [
+  {n:'1 · LOW CALCIUM', text:'Reduced calcitriol means poor dietary calcium absorption, producing hypocalcemia.'},
+  {n:'2 · HIGH PHOSPHATE', text:'Failing kidneys cannot excrete phosphate, producing hyperphosphatemia.'},
+  {n:'3 · COMPLEXATION', text:'Excess phosphate binds remaining free calcium, dropping active calcium further.'},
+  {n:'4 · BONE RESORPTION', text:'The body senses low calcium and releases PTH, which strips calcium from bone — weakening it.'},
+];
+const cycleRow = document.getElementById('cycleRow');
+const cycleDetail = document.getElementById('cycleDetail');
+cycleRow.innerHTML = cycleSteps.map((c,i)=>`
+  <button class="cycle-node" data-i="${i}"><span class="n">${c.n}</span>${c.text.split('.')[0]}.</button>`).join('');
+cycleRow.querySelectorAll('.cycle-node').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    cycleRow.querySelectorAll('.cycle-node').forEach(b=>b.classList.remove('is-picked'));
+    btn.classList.add('is-picked');
+    cycleDetail.classList.remove('muted');
+    cycleDetail.textContent = cycleSteps[btn.dataset.i].text;
+  });
+});
+
+/* ============================================================
+   MINI MAP
+   ============================================================ */
+const mmTopics = [
+  {grp:'GROUP 2', title:'What makes a metal "alkaline earth"', text:'Group 2 of the periodic table — the second vertical column — is called the alkaline earth metals: beryllium, magnesium, calcium, strontium, barium, and radioactive radium.'},
+  {grp:'GROUP 2', title:'s-block chemistry', text:'Together with the alkali metals, alkaline earth metals are called s-block metals. They carry two electrons in an s-orbital outer shell, and their chemistry is defined by losing both electrons to form the stable M²⁺ cation.'},
+  {grp:'GROUP 2', title:'Where they occur in nature', text:'These metals are very reactive, so they are never found pure — only as M²⁺ cations in minerals. Beryllium occurs in beryl (aquamarine, emerald); magnesium in magnesite and dolomite; calcium in limestone, chalk, and marble.'},
+  {grp:'GROUP 2', title:'Reducing power and oxides', text:'Strong reducing power lets Group 2 elements form bivalent M²⁺ cations easily, and they grow more electropositive descending the group. Their oxides carry the general formula MO and are generally basic; peroxides exist for Mg, Ca, Sr and Ba, but not beryllium.'},
+  {grp:'GROUP 2', title:'Hydroxides and halides', text:'Every hydroxide except Be(OH)₂ behaves as a base, with water solubility and thermal stability both rising from Mg to Ba. Halides of Mg, Ca, Sr and Ba are ionic and only sparingly soluble; magnesium halides are hygroscopic, and anhydrous calcium chloride has such a strong affinity for water it is used as a desiccant.'},
+  {grp:'BERYLLIUM', title:'Why beryllium stays out of the clinic', text:'Beryllium and its compounds are extremely poisonous, which severely limits clinical use. Inhalation can cause serious respiratory disease, primarily Chronic Beryllium Disease (CBD), and soluble beryllium compounds cause severe skin irritation on contact.'},
+  {grp:'MAGNESIUM', title:'Magnesium\'s isotopes and salts', text:'Magnesium has three stable isotopes — ²⁴Mg (79% occurrence), ²⁵Mg, and ²⁶Mg — while ²⁸Mg is radioactive with a 21-hour half-life. Most magnesium salts are water soluble and act as a laxative; magnesium hydroxide has limited solubility, forming the suspension known as milk of magnesia, commonly used as a mild antacid base.'},
+  {grp:'MAGNESIUM', title:'Why Mg²⁺ matters at the cellular level', text:'Magnesium is essential cofactor for over 300 enzymatic processes including nucleic acid biochemistry. ATP must bind a magnesium ion — forming Mg-ATP — before it is biologically active. Mg²⁺ also stabilises the structure of DNA and RNA, raising their melting points, and forms the redox-active centre of chlorophyll, making it essential for photosynthesis.'},
+  {grp:'MAGNESIUM', title:'Getting magnesium from food', text:'Good dietary sources are green vegetables, nuts, whole grains, and milk. Because magnesium is water-soluble, boiling vegetables can leach it out. It is absorbed mainly in the ileum and colon, and excreted by the kidneys, which tightly regulate its levels.'},
+  {grp:'MAGNESIUM', title:'How much magnesium is in the body', text:'The average body holds about 24 g of magnesium. It is the fourth most abundant cation overall and the second most abundant cation in interstitial fluid. About 50% is stored in bone, with the remainder in muscle and soft tissue.'},
+  {grp:'MAGNESIUM', title:'When magnesium goes too low or too high', text:'Poor gut absorption makes magnesium salts useful as osmotic laxatives. Hypermagnesemia is rare, usually from kidney failure, and causes muscle weakness and arrhythmia. Hypomagnesemia can result from GI losses like diarrhea, alcoholism, or certain drugs, and often drags down calcium, potassium and sodium alongside it.'},
+  {grp:'MAGNESIUM', title:'Correcting a magnesium deficit', text:'Symptomatic hypomagnesemia is treated with IV or IM magnesium sulfate when levels are critically low, though IM injections are painful. For non-emergency cases, oral magnesium glycerophosphate tablets are used instead. Dose must be reduced in renal impairment, since the kidneys are the primary excretion route.'},
+  {grp:'MAGNESIUM', title:'Magnesium as an emergency drug', text:'IV magnesium sulfate is the emergency treatment for serious, life-threatening irregular heartbeats. It is also the standard emergency treatment for eclampsia, a life-threatening hypertensive disorder of pregnancy.'},
+  {grp:'MAGNESIUM', title:'Magnesium in the gut — antacids', text:'Magnesium hydroxide is the main ingredient in milk of magnesia; it neutralises stomach acid and acts as a laxative via an osmotic effect. Magnesium trisilicate is used for peptic ulcers, raising gastric pH and forming a protective gel over the stomach lining. Antacid formulations often combine magnesium salts (fast-acting) with aluminum salts (which cause constipation) to balance side effects.'},
+  {grp:'MAGNESIUM', title:'Magnesium\'s drug interactions', text:'Magnesium salts, especially in antacids, can reduce absorption of many co-administered drugs — including iron products, nitrofurantoin, proguanil, ACE inhibitors, aspirin, and penicillamine. A full medical history and careful timing of antacid dosing are needed to avoid these interactions.'},
+  {grp:'CALCIUM', title:'Calcium\'s role as a universal messenger', text:'Calcium has four stable isotopes (⁴⁰Ca, ⁴²Ca, ⁴⁴Ca). Ca²⁺ is the most abundant inorganic element in the human body, acting as a universal messenger and mediator for cardiac, skeletal, and smooth muscle contractions, and a critical factor in endocrine, neural, and renal blood pressure homeostasis.'},
+  {grp:'CALCIUM', title:'What calcium does inside and outside cells', text:'Calcium acts as a crucial cellular messenger for neurological and endocrinological processes, and is essential for forming bone and teeth. It also maintains a large intracellular-to-extracellular concentration gradient of roughly 1:10,000, which is critical for cellular responsiveness.'},
+  {grp:'CALCIUM', title:'Where the body keeps its calcium', text:'The body contains about 1000 g of calcium. Ninety-nine percent is stored extracellularly in bone and teeth, which act as a dynamic reservoir, and the remaining 1% circulates in the extracellular space — plasma and lymph.'},
+  {grp:'CALCIUM', title:'How calcium is regulated', text:'Calcium levels are tightly regulated by a balance between gut intake and renal excretion, with the skeleton acting as reservoir. Parathyroid hormone (PTH) is the key calciotropic hormone, raising blood calcium by increasing bone resorption, stimulating gut uptake, and promoting kidney reabsorption. Non-calciotropic hormones such as sex hormones and growth factors influence calcium balance without being directly controlled by it.'},
+  {grp:'CALCIUM', title:'Why modern diets fall short', text:'Dietary calcium intake has plummeted from an estimated 2000–3000 mg/day in the Stone Age to an average of just 600 mg/day today. This widespread deficiency is linked to greater risk of bone fragility (osteoporosis), high blood pressure, and colon cancer.'},
+  {grp:'CALCIUM', title:'Life stages that need more calcium', text:'Three periods demand higher calcium intake: childhood and adolescence, while bones build toward peak strength until about age 18; pregnancy and lactation, which build the fetal skeleton (about 30 g of calcium) and calcium-rich breast milk (160–300 mg/day); and old age, to counteract age-related bone loss.'},
+  {grp:'CALCIUM', title:'Calcium deficiency\'s wider reach', text:'Calcium deficiency is linked to major health issues beyond bone, including hypertension and obesity. Supplementation is not a standalone cure for either, but is a key part of a preventative strategy.'},
+  {grp:'CALCIUM', title:'Osteoporosis and peak bone density', text:'Bones act as a calcium reservoir, so adequate intake — especially during the first three decades of life — is crucial for building peak bone density and slowing age-related loss. Clinically, calcium is best viewed as a preventative strategy for aging, particularly for postmenopausal women, rather than a therapy for bone loss already lost.'},
+  {grp:'CALCIUM', title:'Calcium and blood pressure', text:'Calcium helps regulate blood pressure by influencing smooth muscle contraction — higher calcium levels can reduce vasoconstrictor tone and sympathetic nervous system activity. Supplementation can lower blood pressure, especially in salt-sensitive hypertension, but is not justified as a sole treatment for mild hypertension.'},
+  {grp:'CALCIUM', title:'Calcium and weight', text:'The hypothesis is that a low-calorie, high-calcium diet may fight obesity by increasing energy metabolism. Evidence suggests raising intake toward the recommended ~1200 mg/day may substantially reduce risk of being overweight, but larger long-term studies are still needed to confirm the link.'},
+  {grp:'CALCIUM', title:'Renal osteodystrophy — the root cause', text:'Renal osteodystrophy is a bone mineralisation deficiency from the body\'s inability to keep calcium and phosphate balanced during chronic kidney failure. The root cause is impaired vitamin D activation: healthy kidneys perform the final step converting calcidiol into active calcitriol, and in renal failure this step is depressed, leaving calcitriol too low.'},
+  {grp:'CALCIUM', title:'The vicious cycle of mineral imbalance', text:'Low calcitriol triggers a destructive chain: poor calcium absorption causes hypocalcemia; failing kidneys cannot excrete phosphate, causing hyperphosphatemia; the excess phosphate binds remaining free calcium, lowering it further; and the body senses low calcium, releasing PTH, which strips calcium from bone.'},
+  {grp:'CALCIUM', title:'Breaking the renal osteodystrophy cycle', text:'Treatment aims to break the cycle in three ways: controlling phosphate with phosphate binders and dialysis, replacing hormones with synthetic calcitriol to restore normal calcium absorption, and calcium supplementation to correct deficiencies and support bone.'},
+  {grp:'CALCIUM', title:'Calcium and kidney stones — a reversed belief', text:'Understanding has reversed with newer evidence. The old belief held that low calcium intake prevented kidney stones. New evidence shows low calcium actually increases stone risk by increasing oxalate absorption. The current conclusion: higher calcium intake (about 1200 mg/day) can cut recurrence by roughly 50%, and supplements do not raise risk in healthy people.'},
+  {grp:'CALCIUM', title:'Who needs calcium supplements', text:'Supplements are needed when dietary intake is insufficient, especially for children, pregnant women, and the elderly, who often have impaired absorption. Severe acute hypocalcemia is treated with a slow IV injection of 10% calcium gluconate, with careful monitoring of plasma Ca²⁺ and ECG.'},
+  {grp:'CALCIUM', title:'The common calcium salts', text:'Various salts are used as supplements: calcium carbonate, calcium chloride, calcium phosphate, calcium lactate, calcium aspartate, and calcium gluconate. Calcium carbonate is the most common and least expensive supplement.'},
+  {grp:'CALCIUM', title:'What to know about calcium carbonate', text:'Calcium carbonate contains 40% elemental calcium — 1000 mg of salt provides 400 mg of Ca²⁺, and labels usually list the elemental amount. It can be difficult to digest, causing gas and bloating from a reaction with stomach acid that produces CO₂. It should be taken with food, since absorption is pH-dependent, and co-administering it with magnesium salts helps prevent the constipation it commonly causes.'},
+];
+const mmList = document.getElementById('mmList');
+const mmReader = document.getElementById('mmReader');
+mmList.innerHTML = mmTopics.map((t,i)=>`
+  <button class="mm-item" data-i="${i}"><span>${t.title}</span><span class="grp">${t.grp}</span></button>`).join('');
+mmList.querySelectorAll('.mm-item').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    mmList.querySelectorAll('.mm-item').forEach(b=>b.classList.remove('is-picked'));
+    btn.classList.add('is-picked');
+    const t = mmTopics[btn.dataset.i];
+    mmReader.innerHTML = `<span class="rk">${t.grp}</span><h3>${t.title}</h3><p>${t.text}</p>`;
+  });
+});
+
+/* ============================================================
+   FLASHCARDS  (30+)
+   ============================================================ */
+const flashcards = [
+  {cat:'General', q:'Which elements make up Group 2, the alkaline earth metals?', a:'Beryllium, magnesium, calcium, strontium, barium, and radium.'},
+  {cat:'General', q:'How many valence electrons do alkaline earth metals have, and in what orbital?', a:'Two electrons, in an s-orbital (ns²).'},
+  {cat:'General', q:'What charge does the stable cation of a Group 2 metal carry?', a:'2+ (M²⁺), formed by losing both valence electrons.'},
+  {cat:'General', q:'Why are alkaline earth metals never found as pure elemental metals?', a:'They are too reactive; they exist naturally as M²⁺ cations in minerals.'},
+  {cat:'General', q:'What mineral is beryllium commonly found in?', a:'Beryl, Be₃Al₂[Si₆O₁₈] — e.g. aquamarine and emerald.'},
+  {cat:'General', q:'What two minerals is magnesium commonly found in?', a:'Magnesite (MgCO₃) and dolomite (MgCO₃·CaCO₃).'},
+  {cat:'General', q:'What is calcium's most common natural source?', a:'Limestone, chalk, and marble.'},
+  {cat:'General', q:'What happens to electropositivity as you go down Group 2?', a:'It increases.'},
+  {cat:'General', q:'What is the general formula for Group 2 metal oxides, and are they acidic or basic?', a:'MO, and they are generally basic.'},
+  {cat:'General', q:'Which Group 2 elements form peroxides, and which one does not?', a:'Mg, Ca, Sr and Ba form peroxides; beryllium does not.'},
+  {cat:'General', q:'Which Group 2 hydroxide is the exception that does not act as a base?', a:'Be(OH)₂.'},
+  {cat:'General', q:'What happens to hydroxide solubility and thermal stability from Mg to Ba?', a:'Both increase.'},
+  {cat:'General', q:'Are Group 2 halides (Mg, Ca, Sr, Ba) generally soluble or sparingly soluble?', a:'Sparingly soluble — they are ionic compounds.'},
+  {cat:'General', q:'What property makes magnesium halides notable, and which compounds show it?', a:'They are hygroscopic — MgCl₂, MgBr₂, and MgI₂ absorb moisture from air.'},
+  {cat:'General', q:'What is anhydrous calcium chloride used for, thanks to its strong water affinity?', a:'As a common drying agent (desiccant).'},
+  {cat:'Beryllium', q:'Why is beryllium of limited clinical use?', a:'Beryllium and its compounds are extremely poisonous.'},
+  {cat:'Beryllium', q:'What serious disease can result from inhaling beryllium?', a:'Chronic Beryllium Disease (CBD).'},
+  {cat:'Beryllium', q:'What happens on skin contact with soluble beryllium compounds?', a:'Severe skin irritation.'},
+  {cat:'Magnesium', q:'How many enzymatic processes rely on magnesium as a cofactor?', a:'Over 300.'},
+  {cat:'Magnesium', q:'What must ATP bind to become biologically active?', a:'A magnesium ion, forming Mg-ATP.'},
+  {cat:'Magnesium', q:'What role does Mg²⁺ play in DNA and RNA?', a:'It stabilises their structure, raising their melting points.'},
+  {cat:'Magnesium', q:'What role does Mg²⁺ play in plants?', a:'It forms the redox-active centre of chlorophyll, essential for photosynthesis.'},
+  {cat:'Magnesium', q:'Why do most magnesium salts act as a laxative?', a:'They are water-soluble and poorly absorbed from the gut, drawing water into the intestine.'},
+  {cat:'Magnesium', q:'What is milk of magnesia, chemically?', a:'A suspension of magnesium hydroxide, Mg(OH)₂, used as a mild antacid base.'},
+  {cat:'Magnesium', q:'Where is magnesium mainly absorbed and excreted in the body?', a:'Absorbed in the ileum and colon; excreted by the kidneys.'},
+  {cat:'Magnesium', q:'How much magnesium does the average human body contain, and where is 50% of it stored?', a:'About 24 g; roughly 50% is stored in bone.'},
+  {cat:'Magnesium', q:'What causes hypermagnesemia and what does it look like clinically?', a:'Usually kidney failure; it causes muscle weakness and arrhythmia — a rare condition.'},
+  {cat:'Magnesium', q:'What electrolyte imbalances often accompany hypomagnesemia?', a:'Hypocalcemia, hypokalemia, and hyponatremia.'},
+  {cat:'Magnesium', q:'How is severe, symptomatic hypomagnesemia treated?', a:'IV or IM magnesium sulfate (MgSO₄), though IM injections are painful.'},
+  {cat:'Magnesium', q:'What oral form of magnesium is used for non-emergency supplementation?', a:'Magnesium glycerophosphate tablets.'},
+  {cat:'Magnesium', q:'Why must magnesium dosing be reduced in renal impairment?', a:'The kidneys are the primary route of magnesium excretion.'},
+  {cat:'Magnesium', q:'What is IV magnesium sulfate used for in cardiology?', a:'Emergency treatment of serious, life-threatening arrhythmia.'},
+  {cat:'Magnesium', q:'What obstetric emergency is treated with IV MgSO₄?', a:'Eclampsia — a life-threatening hypertensive disorder of pregnancy.'},
+  {cat:'Magnesium', q:'What is magnesium trisilicate used for?', a:'Peptic ulcers — it raises gastric pH and forms a protective gel over the stomach lining.'},
+  {cat:'Magnesium', q:'Why are magnesium and aluminium salts often combined in antacids?', a:'Magnesium acts quickly but causes diarrhea; aluminium causes constipation — combining balances the side effects.'},
+  {cat:'Magnesium', q:'Name three classes of drugs whose absorption magnesium salts can reduce.', a:'Iron products, certain antibiotics (e.g. nitrofurantoin) and antimalarials (e.g. proguanil) — also ACE inhibitors, aspirin, and penicillamine.'},
+  {cat:'Calcium', q:'What fraction of the body\'s calcium is stored in bone and teeth?', a:'About 99%.'},
+  {cat:'Calcium', q:'What is the approximate intracellular-to-extracellular calcium gradient?', a:'About 1:10,000.'},
+  {cat:'Calcium', q:'What hormone is the key regulator that raises blood calcium?', a:'Parathyroid hormone (PTH).'},
+  {cat:'Calcium', q:'By what three mechanisms does PTH raise blood calcium?', a:'Increasing bone resorption, stimulating gut uptake, and promoting kidney reabsorption.'},
+  {cat:'Calcium', q:'How much has average daily calcium intake fallen from the Stone Age to today?', a:'From roughly 2000–3000 mg/day to about 600 mg/day.'},
+  {cat:'Calcium', q:'Name three chronic disease risks linked to modern calcium deficiency.', a:'Osteoporosis, high blood pressure, and colon cancer.'},
+  {cat:'Calcium', q:'Name the three life stages with elevated calcium demand.', a:'Childhood/adolescence, pregnancy and lactation, and old age.'},
+  {cat:'Calcium', q:'Roughly how much calcium accumulates in the fetal skeleton during pregnancy?', a:'About 30 g.'},
+  {cat:'Calcium', q:'What is the clinical view of calcium\'s role in osteoporosis?', a:'A preventative strategy — building peak bone density in early life — rather than a therapy for existing bone loss.'},
+  {cat:'Calcium', q:'How does calcium help regulate blood pressure?', a:'By influencing smooth muscle contraction, reducing vasoconstrictor tone and sympathetic activity.'},
+  {cat:'Calcium', q:'Is calcium supplementation a stand-alone treatment for mild hypertension?', a:'No — it can help, especially in salt-sensitive hypertension, but is not justified alone.'},
+  {cat:'Calcium', q:'What is the root cause of renal osteodystrophy?', a:'Impaired vitamin D activation — failing kidneys cannot convert calcidiol into active calcitriol.'},
+  {cat:'Calcium', q:'In the renal osteodystrophy cycle, what does excess phosphate do to calcium?', a:'It binds to free calcium (complexation), reducing active calcium levels further.'},
+  {cat:'Calcium', q:'Name the three treatment strategies for renal osteodystrophy.', a:'Controlling phosphate (binders/dialysis), replacing hormones (synthetic calcitriol), and calcium supplementation.'},
+  {cat:'Calcium', q:'What was the old belief about calcium intake and kidney stones?', a:'That low calcium intake prevented kidney stones.'},
+  {cat:'Calcium', q:'What does current evidence say about calcium intake and kidney stones?', a:'Higher calcium intake (~1200 mg/day) reduces stone recurrence by about 50%, without raising risk in healthy people.'},
+  {cat:'Calcium', q:'What percentage of elemental calcium does calcium carbonate provide?', a:'40% — 1000 mg of salt gives 400 mg of Ca²⁺.'},
+  {cat:'Calcium', q:'Why does calcium carbonate sometimes cause gas and bloating?', a:'It reacts with stomach acid, producing CO₂.'},
+  {cat:'Calcium', q:'Why should calcium carbonate be taken with food?', a:'Its absorption is pH-dependent and improves with food.'},
+  {cat:'Calcium', q:'What is the standard treatment for severe acute hypocalcemia?', a:'A slow IV injection of 10% calcium gluconate, with monitoring of plasma Ca²⁺ and ECG.'},
+  {cat:'Calcium', q:'Which calcium salt is the most common and least expensive supplement?', a:'Calcium carbonate.'},
+];
+
+const fcGrid = document.getElementById('fcGrid');
+const fcFilters = document.getElementById('fcFilters');
+document.getElementById('fcCount').textContent = flashcards.length + ' cards';
+
+const cats = ['All', ...new Set(flashcards.map(c=>c.cat))];
+fcFilters.innerHTML = cats.map((c,i)=>`<button class="fc-filter ${i===0?'is-active':''}" data-cat="${c}">${c}</button>`).join('');
+
+function renderCards(){
+  fcGrid.innerHTML = flashcards.map((c,i)=>`
+    <div class="fc-card" data-cat="${c.cat}" data-i="${i}">
+      <div class="fc-inner">
+        <div class="fc-face front">
+          <span class="fc-tag">${c.cat}</span>
+          <span class="fc-q">${c.q}</span>
+          <span class="fc-hint">tap to flip</span>
+        </div>
+        <div class="fc-face back">
+          <span class="fc-tag">ANSWER</span>
+          <span class="fc-a">${c.a}</span>
+          <span class="fc-hint">tap to flip</span>
+        </div>
+      </div>
+    </div>`).join('');
+  fcGrid.querySelectorAll('.fc-card').forEach(card=>{
+    card.addEventListener('click', ()=> card.classList.toggle('flipped'));
+  });
+}
+renderCards();
+
+fcFilters.querySelectorAll('.fc-filter').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    fcFilters.querySelectorAll('.fc-filter').forEach(b=>b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+    const cat = btn.dataset.cat;
+    fcGrid.querySelectorAll('.fc-card').forEach(card=>{
+      card.classList.remove('flipped');
+      card.classList.toggle('is-hidden', cat!=='All' && card.dataset.cat!==cat);
+    });
+  });
+});
+
+/* ============================================================
+   QUIZ BANK (30+ MCQ, shuffled options)
+   ============================================================ */
+const quizBank = [
+  {q:'How many valence electrons do Group 2 elements have?', correct:'2', wrong:['1','3','8']},
+  {q:'What is the general formula for the stable cation formed by alkaline earth metals?', correct:'M²⁺', wrong:['M⁺','M³⁺','M⁻']},
+  {q:'Which Group 2 element does not form a peroxide?', correct:'Beryllium', wrong:['Magnesium','Calcium','Barium']},
+  {q:'Which hydroxide is the exception that does not behave as a base?', correct:'Be(OH)₂', wrong:['Mg(OH)₂','Ca(OH)₂','Ba(OH)₂']},
+  {q:'What is the general formula of Group 2 metal oxides?', correct:'MO', wrong:['M₂O','MO₂','M₂O₃']},
+  {q:'What happens to electropositivity going down Group 2?', correct:'It increases', wrong:['It decreases','It stays constant','It reverses']},
+  {q:'What mineral is beryllium typically found in?', correct:'Beryl', wrong:['Magnesite','Dolomite','Limestone']},
+  {q:'What is magnesite\'s formula?', correct:'MgCO₃', wrong:['CaCO₃','MgCl₂','MgSO₄']},
+  {q:'Dolomite has the formula:', correct:'MgCO₃·CaCO₃', wrong:['MgCO₃ only','CaCO₃ only','MgCl₂·CaCl₂']},
+  {q:'Calcium is naturally abundant in:', correct:'Limestone, chalk, and marble', wrong:['Beryl only','Magnesite only','Seawater only']},
+  {q:'Which magnesium halides are described as hygroscopic?', correct:'MgCl₂, MgBr₂, MgI₂', wrong:['MgF₂ only','MgO and MgS','MgCO₃ and MgSO₄']},
+  {q:'Anhydrous calcium chloride is used industrially as a:', correct:'Desiccant', wrong:['Laxative','Antacid','Antibiotic']},
+  {q:'Which disease is linked to beryllium inhalation?', correct:'Chronic Beryllium Disease (CBD)', wrong:['Osteoporosis','Renal osteodystrophy','Eclampsia']},
+  {q:'Magnesium is a cofactor in approximately how many enzymatic processes?', correct:'Over 300', wrong:['About 10','About 50','Over 1000']},
+  {q:'ATP must bind which ion to become biologically active?', correct:'Mg²⁺', wrong:['Ca²⁺','Na⁺','Fe²⁺']},
+  {q:'Mg²⁺ forms the redox-active centre of which biological molecule?', correct:'Chlorophyll', wrong:['Hemoglobin','Insulin','Collagen']},
+  {q:'Most magnesium salts are water-soluble and act in the body as a:', correct:'Laxative', wrong:['Antihistamine','Diuretic','Sedative']},
+  {q:'Milk of magnesia is a suspension of:', correct:'Magnesium hydroxide', wrong:['Magnesium chloride','Magnesium sulfate','Magnesium carbonate']},
+  {q:'Where is magnesium mainly absorbed in the GI tract?', correct:'Ileum and colon', wrong:['Stomach','Duodenum only','Esophagus']},
+  {q:'The average human body contains roughly how much magnesium?', correct:'24 g', wrong:['2.4 g','240 g','1000 g']},
+  {q:'About what percentage of body magnesium is stored in bone?', correct:'50%', wrong:['10%','25%','99%']},
+  {q:'Hypermagnesemia is most often caused by:', correct:'Kidney failure', wrong:['Excess dietary fiber','Vitamin D deficiency','Overhydration']},
+  {q:'Hypomagnesemia commonly leads to which other imbalances?', correct:'Hypocalcemia, hypokalemia, hyponatremia', wrong:['Hyperglycemia only','Hyperkalemia only','Hypernatremia only']},
+  {q:'Severe symptomatic hypomagnesemia is treated with:', correct:'IV or IM magnesium sulfate', wrong:['Oral iron','IV calcium gluconate','Oral potassium chloride']},
+  {q:'Oral magnesium supplementation for non-emergency cases commonly uses:', correct:'Magnesium glycerophosphate tablets', wrong:['Magnesium metal powder','Magnesium peroxide capsules','Magnesium beryllate']},
+  {q:'IV magnesium sulfate is the standard emergency treatment for which pregnancy complication?', correct:'Eclampsia', wrong:['Gestational diabetes','Placenta previa','Morning sickness']},
+  {q:'Magnesium trisilicate is used to treat:', correct:'Peptic ulcers', wrong:['Arrhythmia','Osteoporosis','Kidney stones']},
+  {q:'Antacids often combine magnesium salts with aluminium salts because:', correct:'Magnesium causes diarrhea, aluminium causes constipation, balancing each other', wrong:['They react to form a stronger acid','Aluminium increases magnesium absorption','It reduces the cost only']},
+  {q:'Magnesium salts in antacids can reduce the absorption of which drug class?', correct:'Iron products and certain antibiotics', wrong:['Statins only','Beta blockers only','Insulin only']},
+  {q:'What percentage of body calcium is stored in bones and teeth?', correct:'99%', wrong:['50%','75%','25%']},
+  {q:'What is the approximate intracellular-to-extracellular calcium concentration ratio?', correct:'1:10,000', wrong:['1:10','1:100','1:1']},
+  {q:'Which hormone raises blood calcium levels?', correct:'Parathyroid hormone (PTH)', wrong:['Insulin','Calcitonin only','Cortisol']},
+  {q:'PTH raises blood calcium by all of the following EXCEPT:', correct:'Reducing bone resorption', wrong:['Increasing bone resorption','Stimulating gut uptake','Promoting kidney reabsorption']},
+  {q:'Estimated Stone Age calcium intake was:', correct:'2000–3000 mg/day', wrong:['200–300 mg/day','600 mg/day','5000 mg/day']},
+  {q:'Average modern calcium intake is approximately:', correct:'600 mg/day', wrong:['1200 mg/day','2000 mg/day','300 mg/day']},
+  {q:'Which is NOT a chronic disease risk linked to calcium deficiency in the notes?', correct:'Chronic Beryllium Disease', wrong:['Osteoporosis','Hypertension','Colon cancer']},
+  {q:'Roughly how much calcium accumulates in the fetal skeleton during pregnancy?', correct:'~30 g', wrong:['~3 g','~300 g','~1000 g']},
+  {q:'Peak bone density is mainly built during:', correct:'The first three decades of life', wrong:['Only after age 50','Only in infancy','Only during pregnancy']},
+  {q:'Calcium is considered clinically most useful for osteoporosis as a:', correct:'Preventative strategy', wrong:['Cure for existing severe bone loss','Painkiller','Antibiotic adjunct']},
+  {q:'Calcium helps regulate blood pressure mainly by:', correct:'Influencing smooth muscle contraction', wrong:['Increasing red blood cell count','Diluting plasma sodium','Inhibiting the liver']},
+  {q:'Calcium supplementation for hypertension is:', correct:'Not justified as a sole treatment for mild hypertension', wrong:['The first-line cure for all hypertension','Contraindicated in all patients','Only useful in children']},
+  {q:'The root cause of renal osteodystrophy is:', correct:'Impaired activation of vitamin D by the kidneys', wrong:['Excess dietary calcium','Overactive thyroid','Beryllium toxicity']},
+  {q:'In vitamin D activation, the liver converts vitamin D into:', correct:'Calcidiol', wrong:['Calcitriol','Calcitonin','Cholecalciferol only']},
+  {q:'The kidney converts calcidiol into the active hormone:', correct:'Calcitriol', wrong:['Calcidiol','PTH','Vitamin D3 directly']},
+  {q:'In renal osteodystrophy, failing kidneys cause phosphate levels to become:', correct:'Too high (hyperphosphatemia)', wrong:['Too low','Unchanged','Immediately normalized']},
+  {q:'Excess phosphate in renal osteodystrophy binds free calcium in a process called:', correct:'Complexation', wrong:['Oxidation','Hydrolysis','Esterification']},
+  {q:'Treatment strategies for renal osteodystrophy include all of the following EXCEPT:', correct:'Restricting all vitamin D activation', wrong:['Phosphate binders and dialysis','Synthetic calcitriol','Calcium supplementation']},
+  {q:'Current evidence on calcium intake and kidney stones shows that higher calcium intake:', correct:'Can reduce stone recurrence by about 50%', wrong:['Always causes new stones','Has no measurable effect','Only affects strontium levels']},
+  {q:'Low calcium intake increases kidney stone risk because it:', correct:'Increases oxalate absorption', wrong:['Decreases oxalate absorption','Increases beryllium excretion','Has no known mechanism']},
+  {q:'Calcium carbonate provides what percentage of elemental calcium?', correct:'40%', wrong:['10%','75%','100%']},
+  {q:'Calcium carbonate can cause gas and bloating because it reacts with stomach acid to produce:', correct:'CO₂', wrong:['O₂','H₂','N₂']},
+  {q:'Calcium carbonate absorption is best when taken:', correct:'With food', wrong:['On an empty stomach only','At bedtime only','With grapefruit juice only']},
+  {q:'Co-administering calcium carbonate with magnesium salts helps prevent:', correct:'Constipation', wrong:['Diarrhea','Hypertension','Arrhythmia']},
+  {q:'Severe acute hypocalcemia is treated with:', correct:'Slow IV 10% calcium gluconate', wrong:['Oral calcium carbonate only','IV magnesium sulfate only','Oral vitamin D only']},
+  {q:'Monitoring during IV calcium gluconate treatment should include:', correct:'Plasma Ca²⁺ levels and ECG', wrong:['Blood glucose only','Liver enzymes only','Urine pH only']},
+  {q:'Which calcium salt is the most common and least expensive supplement?', correct:'Calcium carbonate', wrong:['Calcium gluconate','Calcium aspartate','Calcium lactate']},
+  {q:'Which of these groups has an increased calcium requirement?', correct:'Pregnant women', wrong:['Adults aged 30–40 with no risk factors','People with beryllium exposure','None of the above']},
+];
+
+let userAnswers = {};
+const quizList = document.getElementById('quizList');
+document.getElementById('quizCount').textContent = quizBank.length + ' questions';
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function buildQuiz(){
+  userAnswers = {};
+  quizList.innerHTML = quizBank.map((item,qi)=>{
+    const opts = shuffle([item.correct, ...item.wrong]);
+    return `
+    <div class="q-item" data-qi="${qi}" data-correct="${item.correct.replace(/"/g,'&quot;')}">
+      <span class="q-num">QUESTION ${qi+1} OF ${quizBank.length}</span>
+      <div class="q-text">${item.q}</div>
+      <div class="q-opts">
+        ${opts.map(o=>`<button class="q-opt" data-val="${o.replace(/"/g,'&quot;')}">${o}</button>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  updateScore();
+
+  quizList.querySelectorAll('.q-item').forEach(item=>{
+    const correct = item.dataset.correct;
+    item.querySelectorAll('.q-opt').forEach(opt=>{
+      opt.addEventListener('click', ()=>{
+        const qi = item.dataset.qi;
+        if(userAnswers[qi] !== undefined) return;
+        const val = opt.dataset.val;
+        userAnswers[qi] = (val === correct);
+        item.querySelectorAll('.q-opt').forEach(o=>{
+          o.disabled = true;
+          if(o.dataset.val === correct) o.classList.add('correct');
+          else if(o === opt) o.classList.add('wrong');
+        });
+        updateScore();
+      });
+    });
+  });
+}
+
+function updateScore(){
+  const answered = Object.keys(userAnswers).length;
+  const correct = Object.values(userAnswers).filter(Boolean).length;
+  document.getElementById('scoreVal').textContent = correct;
+  document.getElementById('scoreTotal').textContent = answered + ' answered';
+}
+
+document.getElementById('resetQuiz').addEventListener('click', buildQuiz);
+buildQuiz();
+</script>
+</body>
+</html>
